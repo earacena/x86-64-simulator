@@ -5,11 +5,19 @@
 
 # Class GUI
 class GUI:
+    def main_menu(self):
+      print("")
+      print("╔═══════════════════════════════════════════════╗")
+      print("║                x86_64 Simulator               ║")
+      print("║                Emanuel Aracena                ║")
+      print("╚═══════════════════════════════════════════════╝")
+
     # menu_loop
     def menu_loop(self):
         choice = ""
         phase = 1
         while choice is not "z":
+            self.main_menu()
             if phase == 1:
                 self.phase_1_menu()
                 choice = input("\nChoice: ")
@@ -108,7 +116,8 @@ class GUI:
     def phase_2_menu(self):
         print("")
         print("a. Reset and load new source code")
-        print("b. View instructions")
+        print("┕ b. View instructions")
+        print("")
         print("c. Convert to binary")
         print("")
         print("z. Quit")
@@ -136,8 +145,9 @@ class GUI:
     def phase_3_menu(self):
         print("")
         print("a. Reset and load new source code")
-        print("b. View instructions")
-        print("c. View binary")
+        print("┝ b. View instructions")
+        print("┕ c. View binary")
+        print("")
         print("d. Load into memory")
         print("")
         print("z. Quit")
@@ -162,16 +172,17 @@ class GUI:
     def phase_4_menu(self):
         print("")
         print("a. Reset and load new source code")
-        print("b. View instructions")
-        print("c. View binary")
+        print("┝ b. View instructions")
+        print("┕ c. View binary")
+        print("")
         print("d. Simulate one instruction")
-        print("e. View Cache table")
-        print("f. View Cache statistics")
-        print("g. View registers")
-        print("h. View memory layout")
-        print("i. View virtual memory layout")
-        print("j. View page table")
-        print("k. View current run-time info")
+        print("┝ e. View Cache table")
+        print("┝ f. View Cache statistics")
+        print("┝ g. View registers")
+        print("┝ h. View memory layout")
+        print("┝ i. View virtual memory layout")
+        print("┝ j. View page table")
+        print("┕ k. View current run-time info")
         print("")
         print("z. Quit")
     
