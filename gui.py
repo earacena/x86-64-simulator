@@ -5,12 +5,16 @@
 
 # Class GUI
 class GUI:
+
+    def __init__(self, debug):
+        self.debug_info = True
+
     def main_menu(self):
-      print("")
-      print("╔═══════════════════════════════════════════════╗")
-      print("║                x86_64 Simulator               ║")
-      print("║                Emanuel Aracena                ║")
-      print("╚═══════════════════════════════════════════════╝")
+        print("")
+        print("╔═══════════════════════════════════════════════╗")
+        print("║                x86_64 Simulator               ║")
+        print("║                Emanuel Aracena                ║")
+        print("╚═══════════════════════════════════════════════╝")
 
     # menu_loop
     def menu_loop(self):
