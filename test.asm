@@ -26,7 +26,7 @@ mov edx, DWORD PTR [rbp-32]
 mov eax, DWORD PTR [rbp-4]
 mov esi, edx
 mov edi, eax
-callf1(int, int)
+call f1(int, int)
 mov DWORD PTR [rbp-4], eax
 mov eax, 0
 leave

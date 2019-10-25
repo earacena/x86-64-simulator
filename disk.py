@@ -68,7 +68,6 @@ class Disk:
     def find_initial_page(self):
         for index, page in enumerate(self.page_table):
             for instruction in page:
-                print(index, instruction)
                 if 'main:' in instruction:
                     self.initial_page_number = index
                     return 
@@ -90,9 +89,9 @@ def main():
 
 
     # Largest possible instruction size: 15 bytes
-    max_instr_size = 15
+    max_instr_size = 4
     # page size is 100 bytes
-    disk.page_size = 100
+    disk.page_size = 32
     filename = "test.asm"
 
     # Main interface functions
