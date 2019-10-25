@@ -16,11 +16,9 @@ def main():
 
     debug = True
 
-
-
-    memory_size = input("[?] Size of main memory: ")
-    cache_size  = input("[?] Size of cache: ")
-    page_size   = input("[?] Size of pages: ")
+    memory_size = input("[?] Size of main memory (bytes): ")
+    cache_size  = input("[?] Size of cache (bytes): ")
+    page_size   = input("[?] Size of pages (bytes): ")
     
 
   

@@ -89,9 +89,16 @@ class Bus:
         
         # CPU Requests
 
-        ## cpu, memory access, virtual_addr  
 
         # Memory Requests
+        if component_caller == "memory" and request == "disk, initial page number":
+            return disk.initial_page_number
+
+        if component_caller == "memory" and request == "disk, send page size":
+            return disk.page_size
+
+        if component_caller == "memory" and request == "disk, send page":
+            return disk.load_page(int(adresss))
         
         # Cache Requests
 
