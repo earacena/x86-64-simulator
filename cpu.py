@@ -9,8 +9,10 @@ class CPU:
             print("[CPU] initializing...")
 
         ### Initialization code ###
-        
+
+        # debug info flag        
         self.debug_info = debug
+
         # Number of lines before and after program counter printed when
         # the CPU prints program with position   
         self.size_of_print = 5
@@ -30,8 +32,15 @@ class CPU:
         self.instr_ptr  = 0
         self.rflags     = 0
 
+        # Virtual Memory Address variables
+        self.virtual_memory_used = 0
+        # {"A[1]": "020"}
+        # left value is data being requested, right side is virtual address
+        self.virtual_memory = {}
+
         # Performance/timing variables
-        self.current_instr_size = 0
+        self.current_instr_size   = 0
+        self.current_instr_cycles = 0
         self.cpi = 0
 
         ###########################
@@ -41,38 +50,49 @@ class CPU:
     def ALU(self, op, dest_reg, src_reg, value):
        
         if self.debug_info == True:
-            print("[CPU] ALU called with parameters: ")
-            print("[CPU]\tOP:", op)
-            print("[CPU]\tDest. reg:", dest_reg)
-            print("[CPU]\tSrc. reg:", src_reg)
-            print("[CPU]\tValue:", value)
+            self.print_alu_debug(op, dest_reg, src_reg, value)
 
         # mov
+        if op == "mov":
+            return;
+
         # add
+        if op == "add":
+            return;
+
         # sub
+        if op == "sub":
+            return;
+
         # cmp
+        if op == "cmp":
+            return;
+
         # jmp
-        
-    def print_register_table():
+        if op == "jmp":
+            return;
+
+
+    # Print the values of all the registers        
+    def print_register_table(self):
         padding = "___________________"
     
         print(padding + "Register Table " + padding)   
-        print("| RAX    = ", rax)
-        print("| RBX    = ", rbx)
-        print("| RCX    = ", rcx)
-        print("| RDX    = ", rdx)
-        print("| R8     = ", r8)
-        print("| R9     = ", r9)
-        print("| PC     = ", pc)
-        print("| RSP    = ", rsp)
-        print("| RBP    = ", rbp)
-        print("| RIP    = ", rip)
-        print("| RFLAGS = ", rflags)
+        print("| RAX    = ", self.rax)
+        print("| RBX    = ", self.rbx)
+        print("| RCX    = ", self.rcx)
+        print("| RDX    = ", self.rdx)
+        print("| R8     = ", self.r8)
+        print("| R9     = ", self.r9)
+        print("| PC     = ", self.pc)
+        print("| RSP    = ", self.rsp)
+        print("| RBP    = ", self.rbp)
+        print("| RIP    = ", self.rip)
+        print("| RFLAGS = ", self.rflags)
         print(padding + padding + padding)
   
-    # display the position of the program counter and
-    # program
-    def print_program_with_position():
+    # Display the position of the program counter and program
+    def print_program_with_position(self):
         # copy =  bus.communicate("cpu", "request page, print",
         #                         [self.size_of_pos, program_counter])
 
@@ -81,4 +101,9 @@ class CPU:
         #     print(program_counter + offset, |, line)
         #     program_counter = program_counter + 1
 
-    
+    def print_alu_debug(self, op, dest_reg, src_reg, value):    
+        print("[CPU] ALU |        op: ", op)
+        print("          |  dest_reg: ", dest_reg)
+        print("          |   src_reg: ", src_reg)
+        print("          |     value: ", value)
+

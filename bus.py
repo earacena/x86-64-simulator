@@ -81,12 +81,24 @@ class Bus:
     # communicate with another component and return requested information
     def communicate(component_caller, request, address):
         if self.debug_info == True:
-            print("[Bus] caller: ", component_caller)
+            print("[Bus] caller:    ", component_caller)
             print("[Bus]   request: ", request)   
             print("[Bus]   address: ", address)
         
         ### Request handling ### 
+        
+        # CPU Requests
 
+        ## cpu, memory access, virtual_addr  
+
+        # Memory Requests
+        
+        # Cache Requests
+
+        # TLB Requests
+
+        # Disk Requests
+  
         ########################
 
         if self.debug_info == True:

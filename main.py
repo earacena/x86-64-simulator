@@ -13,15 +13,23 @@ from disk import Disk
 from bus import Bus
 
 def main():
-  
+
     debug = True
+
+
+
+    memory_size = input("[?] Size of main memory: ")
+    cache_size  = input("[?] Size of cache: ")
+    page_size   = input("[?] Size of pages: ")
+    
+
   
     # Initialize components with bus and debug flag
     bus    = Bus(debug)
     cpu    = CPU(bus, debug)
-    cache  = Cache(bus, debug)
+    cache  = Cache(bus, cache_size, debug)
     tlb    = TLB(bus, debug)
-    memory = Memory(bus, debug)
+    memory = Memory(bus, memory_size, debug)
     disk   = Disk(bus, debug)
   
     # Link components with bus
