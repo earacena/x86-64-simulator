@@ -100,6 +100,7 @@ class CPU:
         # for line in copy:
         #     print(program_counter + offset, |, line)
         #     program_counter = program_counter + 1
+        pass
 
     def print_alu_debug(self, op, dest_reg, src_reg, value):    
         print("[CPU] ALU |        op: ", op)
