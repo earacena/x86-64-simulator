@@ -3,6 +3,8 @@
 # Filename: memory.py
 # File Description: This file contains the functions related to the memory component
 
+from random import randint
+
 from bus import Bus
 from common import phex
 
@@ -29,18 +31,18 @@ class Memory:
         ### Virtual Memory ###        
       
         # Assuming size of memory is   
-        self.stack_address_used     = 8000 # decrease as memory is used, stack
+        self.stack_address_used     = 0x8000 # decrease as memory is used, stack
                                            # grows up
-        self.CONST_stack_start      = 8000
+        self.CONST_stack_start      = 0x8000
 
         self.heap_address_used      = 0 # increase as memory is used
-        self.CONST_heap_start       = 4000
+        self.CONST_heap_start       = 0x4000
 
         self.BSS_address_used       = 0 # increase as memory is used
-        self.CONST_BSS_start        = 2000
+        self.CONST_BSS_start        = 0x2000
 
         self.text_address_used      = 0 # increase as memory is used
-        self.CONST_text_start       = 1000
+        self.CONST_text_start       = 0x1000
         ###########################
   
         if self.debug_info == True:
@@ -76,34 +78,70 @@ class Memory:
                 self.memory[counter+2] = "."    # byte addressing, ...
                 self.memory[counter+3] = "."    # ...
                 counter = counter + 4
-                self.text_address_used = self.text_address_used + 4
                 self.memory_used = self.memory_used + 4 
 
     def replace_page(self, page):
-        pass
+        if self.debug_info == True:
+            print("[Memory] Replacing memory page randomly with page", page.page_number , "...")
+
+        # memory_size/ page_size = number of page positions
+        possible_page_positions = self.memory_size / page.page_size - 1
+        picked_position = random.randint(0, possible_page_positions)
+
+        counter = 0 + (page.page_size * picked_position)
+
+        for instruction in page.instructions:
+            self.memory[counter] = instruction
+            counter = counter + 4
+
+        # update_virtual_memory(page.page_number)
 
     # print what working memory looks like
     def print_memory_page_table(self):
+        if self.debug_info == True:
+            print("\n[Memory] Printing contents of memory...")
         unallocated = "...unallocated..."
         for index, instruction in enumerate(self.memory):
             if instruction == None:
                 output = unallocated
             else:
                 output = instruction
-            print(phex(index, 10), " | ", output)
+            print("[...] ", phex(index, 10), " | ", output)
+
+    # After initial pages load, map all pages
+    def map_pages_to_virtual(self, callee, callee_name):
+        if self.debug_info == True:
+            print("[V. Memory / Memory] Mapping memory pages to virtual memory...")
+        counter = self.CONST_text_start
+        
+        all_pages = self.bus.communicate("virtual memory", callee, callee_name, 
+                                         "disk, all pages for mapping", "")
+
+        for page in all_pages:
+            for instruction in page.instructions:
+                self.virtual_memory[counter] = instruction
+                counter = counter + 4
+
+
+    def update_virtual_memory(self, page_number, position):
+        pass
+        
 
     def print_virtual_memory_layout(self):
-#        for index, data in self.virtual_memory:
-#            if index == self.stack_address_available:
-#                print("[...] STACK(up): ")
-#            if index == self.heap_address_available:
-#                print("[...] HEAP(down):")
-#            if index == self.BSS_address_available:
-#                print("[...] BSS:")
-#            if index == self.text_address_available:
-#                print("[...] TEXT (instructions):")
-#            print("[...]\t",data)
-        pass
+        if self.debug_info == True:
+            print("\n[V. Memory] Printing contents of virtual memory table...:")
+        for index, data in enumerate(self.virtual_memory):
+            if index == self.CONST_stack_start:
+                print("[...] STACK(up): ")
+            if index == self.CONST_heap_start:
+                print("[...] HEAP(down):")
+            if index == self.CONST_BSS_start:
+                print("[...] BSS:")
+            if index == self.CONST_text_start:
+                print("[...] TEXT (instructions):")
+
+            if data != None:
+                print("[...]", phex(index, 10), " ~ ", data)
 
 # For unit testing
 def main():
@@ -119,7 +157,7 @@ def main():
     memory = Memory(memory_size, virtual_memory_size, debug)
 
     memory.load_initial_pages_of_program(disk, "disk")
-
+    memory.map_pages_to_virtual(disk, "disk")
     memory.print_memory_page_table()
     memory.print_virtual_memory_layout()
 

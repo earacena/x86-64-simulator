@@ -40,7 +40,9 @@ class Bus:
 
         if component_caller == "memory" and request == "disk, send page":
             ret = component_callee.load_page(int(info))
-        
+
+        if component_caller == "virtual memory" and request == "disk, all pages for mapping":
+            ret = component_callee.storage        
         # Cache Requests
 
         # TLB Requests
