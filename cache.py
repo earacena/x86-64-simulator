@@ -31,7 +31,7 @@ class Cache:
         self.num_of_sets = num_of_sets 
 
         # set (10 bytes)  - block 1 (5 bytes) | block 2 (5 bytes)
-        self.cache = [None] * ((self.cache_size / self.block_size) / self.num_of_sets)
+        self.cache = [None] * int(((self.cache_size / self.block_size) / self.num_of_sets))
         ###########################
         
             
