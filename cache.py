@@ -111,14 +111,22 @@ class Cache:
                 return index            
 
     # returns "HIT" or "MISS" depending on if data is present
-    def find_block(self, data):
+    def find_block(self, address):
         if self.debug_info == True:
-            print("[Cache] looking for block with data '" + data + "'...")
+            print("[Cache] looking for block with address '" + address + "'...")
+        
+        for block in self.cache:
+            if block.data[0] == address:
+                return block.data[1]
 
-    # If data was missing, and cache is full, replace LRU
-    def replace_block(self, address):
+        # If this point reached, return Miss
+        return "MISS" 
+
+
+    # If data was missing, and find and store
+    def store_block(self, address):
         if self.debug_info == True:
-            print("[Cache] Replacing LRU with new block...")
+            print("[Cache] Looking for new block in memory...")
 
     def update_timer(self):
         for block in self.cache:
@@ -171,3 +179,12 @@ def main():
     # test swapping LRU
     cache.insert(["0x4444", 1100])
 
+    # test finding data based on virtual address
+    data = cache.find_block("0xEEEE")
+    print("\n[TEST] Looking for data with address '0xEEEE'...")
+    print("[...] Data found/Status: ", data)
+    
+    # test finding data that isnt present, SHOULD RETURN "MISS"
+    data = cache.find_block("0xGGGG")
+    print("\n[TEST] Looking for data with address '0xGGGG'...")
+    print("[...] Data found/Status: ", data)
