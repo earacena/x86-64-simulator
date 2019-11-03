@@ -124,13 +124,17 @@ class Cache:
 
 
     # If data was missing, and find and store
-    def store_block(self, address):
-        if self.debug_info == True:
-            print("[Cache] Looking for new block in memory...")
+    #def look_for_block_addr_in_tlb(self, address, callee, callee_name):
+    #    if self.debug_info == True:
+    #        print("[Cache] Looking for new block in TLB...")
+    #    
+    #    block = self.bus.communicate("cache", callee, callee_name, 
+    #                                 "TLB, physical address of virtual", address)
 
     def update_timer(self):
         for block in self.cache:
             block.timer = block.timer + 1
+
     def print_cache(self):
         counter = 0
         print("[Cache] Printing contents of cache:")
@@ -187,4 +191,4 @@ def main():
     # test finding data that isnt present, SHOULD RETURN "MISS"
     data = cache.find_block("0xGGGG")
     print("\n[TEST] Looking for data with address '0xGGGG'...")
-    print("[...] Data found/Status: ", data)
+    print("[...] Data found/Status: ", data) 
