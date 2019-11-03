@@ -53,8 +53,8 @@ class Cache:
         oldest_block_number = None
 
         for index, block in enumerate(self.cache):
-            if block.timer >= oldest:
-                oldest = set.block1.timer
+            if block.timer >= oldest_time:
+                oldest_time = block.timer
                 oldest_block_number = index
                 
         # Once oldest time is marked, find first block with that time
@@ -72,7 +72,7 @@ class Cache:
     # insert, insert data into a block in position of previous LRU
     def insert(self, data): 
         if self.debug_info == True:
-            print("[Cache] inserting block...")
+            print("\n[Cache] inserting block...")
             print("[...]        Data: ", data)
             print("[...] Current Cache table: ")
             self.print_cache()
@@ -85,8 +85,8 @@ class Cache:
 
             if self.debug_info == True:
                 print("[Cache] LRU block to be replaced: ", )
-                print("[...]    data: ", lru_block.data)
-                print("[...]   timer: ", lru_block.timer) 
+                print("[...]    data: ", self.cache[lru_block].data)
+                print("[...]   timer: ", self.cache[lru_block].timer) 
             
             self.cache[lru_block] = Block()
             self.cache[lru_block].valid = 1
@@ -101,6 +101,7 @@ class Cache:
             self.cache[position] = Block()
             self.cache[position].data = data
             self.cache[position].valid = 1
+            self.num_of_blocks_used = self.num_of_blocks_used + 1
             
             
 
@@ -124,12 +125,14 @@ class Cache:
             block.timer = block.timer + 1
     def print_cache(self):
         counter = 0
+        print("[Cache] Printing contents of cache:")
         print("[...] Set | B1 timer | B1 data\t| B2 timer | B2 data\t")
         it = iter(self.cache)
         for block in it:
               block2 = next(it)
               print("[...] ", counter, " | " , block.timer, " | ", block.data, " | ",
                     block2.timer, " | ", block2.data)
+              counter = counter + 1
             
 
 def main():
@@ -160,6 +163,11 @@ def main():
     cache.insert(["0x2222", 900])
     cache.update_timer()
     cache.insert(["0x3333", 1000])
-    cache.update_timer()
-
+    cache.update_timer() 
+    print("")
     cache.print_cache()
+
+
+    # test swapping LRU
+    cache.insert(["0x4444", 1100])
+
