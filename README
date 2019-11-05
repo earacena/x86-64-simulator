@@ -1,0 +1,14 @@
+Project title: x86_64 CPU simulator
+Author: Emanuel Aracena
+Description: A simple, abstracted, CPU simulator that demonstrates concepts like paging, virtual memory,
+             and bus communication in x86_64 hardware.
+
+To run unit tests on each component, in terminal type:
+    python3 (>>> means inside python environment)
+    >>> import component (without the .py extension)
+    >>> component.main()
+
+All components except for gui.py and bus.py contain a unit test.
+
+To run, type:
+    python3 main.py

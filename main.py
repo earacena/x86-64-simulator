@@ -24,20 +24,14 @@ def main():
   
     # Initialize components with bus and debug flag
     bus    = Bus(debug)
-    cpu    = CPU(bus, debug)
-    cache  = Cache(bus, cache_size, debug)
-    tlb    = TLB(bus, debug)
-    memory = Memory(bus, memory_size, debug)
-    disk   = Disk(bus, debug)
+    cpu    = CPU(debug)
+    cache  = Cache(cache_size, block_size, debug)
+    tlb    = TLB(table_size, debug)
+    memory = Memory(bus, memory_size, virtual_memory_size, debug)
+    disk   = Disk(debug)
   
-    # Link components with bus
-    bus.link_cpu(cpu)
-    bus.link_cache(cache)
-    bus.link_tlb(tlb)
-    bus.link_memory(memory)
-    bus.link_disk(disk)
-   
     menu   = GUI(bus, cpu, cache, tlb, memory, disk)
     menu.menu_loop()
 
 main()
+

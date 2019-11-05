@@ -6,13 +6,19 @@
 # Class GUI
 class GUI:
 
-    def __init__(self, debug):
+    def __init__(self, bus, cpu, cache, tlb, memory, disk, debug):
         self.debug_info = True
+        self.bus = bus
+        self.cpu = cpu
+        self.cache = cache
+        self.tlb = tlb
+        self.memory = memory
+        self.disk = disk
 
     def main_menu(self):
         print("")
         print("╔═══════════════════════════════════════════════╗")
-        print("║                x86_64 Simulator               ║")
+        print("║                x86_64 CPU Simulator           ║")
         print("║                Emanuel Aracena                ║")
         print("╚═══════════════════════════════════════════════╝")
 
@@ -42,7 +48,7 @@ class GUI:
                     self.view_instructions()
                 elif choice == "c":
                     phase = 3
-                    self.convert_to_binary()
+                    self.page_application()
                 elif choice == "z":
                     # Quit
                     self.quit() 
@@ -55,14 +61,12 @@ class GUI:
                     self.load_source_code()
                 elif choice == "b":
                     self.view_instructions()
-                elif choice == "c":
-                    self.view_binary()
                 elif choice == "d":
                     self.load_into_memory()
                     phase = 4
                 elif choice == "z":
                     # Quit
-                    self.quit() 
+                    self.quit()
             elif phase == 4:
                 self.phase_4_menu()
                 choice = input("\nChoice: ")
@@ -72,8 +76,6 @@ class GUI:
                     self.load_source_code()
                 elif choice == "b":
                     self.view_instructions()
-                elif choice == "c":
-                    self.view_binary()
                 elif choice == "d":
                     self.simulate_one_instruction()
                 elif choice == "e":
@@ -109,6 +111,8 @@ class GUI:
     def load_source_code(self):
         print("")
         print("Load source code selected!")
+        filename = input("Filename?[x86_64 .asm only]: ")
+        self.disk.load_file(filename)
     
     ## quit
     def quit(self):
@@ -122,13 +126,37 @@ class GUI:
         print("a. Reset and load new source code")
         print("┕ b. View instructions")
         print("")
-        print("c. Convert to binary")
+        print("c. Page source code.")
         print("")
         print("z. Quit")
-    
+   
+
+    def page_application(self):
+        max_instr_size = 4
+        self.disk.page_application(max_instr_size) 
+
     def reset_simulator(self):
         print("")
         print("Reset simulator, selected!")
+
+        # instance new component objects
+        debug = self.bus.debug_info
+
+        self.bus = Bus(debug)
+        self.cpu = CPU(debug)
+        
+        cache_size = self.cache.cache_size
+        block_size = self.cache.block_size
+        self.cache = Cache()
+
+        table_size = self.tlb.table_size
+        self.tlb = TLB(table_size, debug)
+
+        memory_size = self.memory.memory_size
+        virtual_memory_size = self.virtual_memory_size
+        self.memory = Memory(memory_size, virtual_memory_size, debug)
+
+        self.disk = Disk(debug)
     
     ## phase_2_choice_A
     def reset_and_load_source_code(self):
@@ -139,18 +167,17 @@ class GUI:
     def view_instructions(self):
         print("")
         print("View instructions selected!")
-    
+
+        for instruction in self.disk.source_code:
+            print("| " + instruction)
+
     ## phase_2_choice_C
-    def convert_to_binary(self):
-        print("")
-        print("Convert to binary selected!")
     
     # phase_3_menu
     def phase_3_menu(self):
         print("")
         print("a. Reset and load new source code")
-        print("┝ b. View instructions")
-        print("┕ c. View binary")
+        print("┕ b. View instructions")
         print("")
         print("d. Load into memory")
         print("")
@@ -159,15 +186,13 @@ class GUI:
     ## phase_2_choice_A
     ## phase_2_choice_B
     
-    ## phase_3_choice_C
-    def view_binary(self):
-        print("")
-        print("View binary selected!")
     
     ## phase_3-choice_D
     def load_into_memory(self):
         print("")
         print("Load into memory selected!")
+        self.memory.load_initial_pages_of_program(self.disk, "disk")
+        self.memory.map_pages_to_virtual(self.disk, "disk")
     
     ## quit
     
@@ -176,8 +201,7 @@ class GUI:
     def phase_4_menu(self):
         print("")
         print("a. Reset and load new source code")
-        print("┝ b. View instructions")
-        print("┕ c. View binary")
+        print("┕ b. View instructions")
         print("")
         print("d. Simulate one instruction")
         print("┝ e. View Cache table")
@@ -203,6 +227,7 @@ class GUI:
     def view_cache_table(self):
         print("")
         print("View cache table selected!")
+        self.cache.print_cache()
     
     ## phase_4_choice_F
     def view_cache_stats(self):
@@ -214,24 +239,26 @@ class GUI:
     def view_registers(self): 
         print("")
         print("View registers selected!")
+        self.cpu.print_register_table()
     
     
     ## phase_4_choice_H
     def view_memory_layout(self):
         print("")
         print("View memory layout selected!")
-        
-    
+        self.memory.print_memory_page_table() 
+
     ## phase_4_choice_I
     def view_virtual_mem_layout(self):
         print("")
         print("View virtual memory layout selected!")
-    
+        self.memory.print_virtual_memory_layout   
+
     ## phase_4_choice_J
     def view_page_table(self): 
         print("")
         print("View page table selected!")
-    
+        self.disk.print_page_table()
     
     ## phase_4_choice_K
     def view_runtime_info(self):
