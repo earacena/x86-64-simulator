@@ -12,8 +12,8 @@ from memory import Memory
 
 # TLB holds a long list of recently translated virtual addresses
 class TLB:
-    def __init__(self, table_size):
-        self.debug_info = True
+    def __init__(self, table_size, debug):
+        self.debug_info = debug
         self.table_size = table_size
         self.virtual_page_table = [None] * self.table_size
         self.num_of_entries = 0

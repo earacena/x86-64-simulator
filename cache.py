@@ -139,10 +139,10 @@ class Cache:
         counter = 0
         print("[Cache] Printing contents of cache:")
         print("[...] Set | B1 timer | B1 data\t| B2 timer | B2 data\t")
-        it = iter(self.cache)
-        for block in it:
-              block2 = next(it)
-              print("[...] ", counter, " | " , block.timer, " | ", block.data, " | ",
+        for i in range(0, len(self.cache)-1, 2):
+              block1 = self.cache[i]
+              block2 = self.cache[i+1]
+              print("[...] ", counter, " | " , block1.timer, " | ", block1.data, " | ",
                     block2.timer, " | ", block2.data)
               counter = counter + 1
             
@@ -160,7 +160,7 @@ def main():
     cache.update_timer()
     cache.insert(["0xBBBB", 200])
     cache.update_timer()
-    cache.insert(["0xCCCC", 300])
+    cache.insert(["0xCCCC", 300]) 
     cache.update_timer()
     cache.insert(["0xDDDD", 400])
     cache.update_timer()

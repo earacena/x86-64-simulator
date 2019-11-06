@@ -18,7 +18,7 @@ class GUI:
     def main_menu(self):
         print("")
         print("╔═══════════════════════════════════════════════╗")
-        print("║                x86_64 CPU Simulator           ║")
+        print("║              x86_64 CPU Simulator             ║")
         print("║                Emanuel Aracena                ║")
         print("╚═══════════════════════════════════════════════╝")
 
@@ -168,8 +168,9 @@ class GUI:
         print("")
         print("View instructions selected!")
 
+        print("\n[PRINT] Printing source code...")
         for instruction in self.disk.source_code:
-            print("| " + instruction)
+            print("[...] ", instruction.strip('\n'))
 
     ## phase_2_choice_C
     

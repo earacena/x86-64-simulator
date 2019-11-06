@@ -129,21 +129,18 @@ class CPU:
 
     # Print the values of all the registers        
     def print_register_table(self):
-        padding = "___________________"
-    
-        print(padding + "Register Table " + padding)   
-        print("| RAX    = ",phex(self.register_table["rax"], 6))
-        print("| RBX    = ",phex(self.register_table["rbx"], 6))
-        print("| RCX    = ",phex(self.register_table["rcx"], 6))
-        print("| RDX    = ",phex(self.register_table["rdx"], 6))
-        print("| R8     = ",phex(self.register_table["r8"], 6))
-        print("| R9     = ",phex(self.register_table["r9"], 6))
-        print("| PC     = ",phex(self.register_table["pc"], 6))
-        print("| RSP    = ",phex(self.register_table["rsp"], 6))
-        print("| RBP    = ",phex(self.register_table["rbp"], 6))
-        print("| RIP    = ",phex(self.register_table["rip"], 6))
-        print("| RFLAGS = ",phex(self.register_table["rflags"], 6))
-        print(padding + padding + padding)
+        print("[CPU] Printing register table...")   
+        print("[...] RAX    = ",phex(self.register_table["rax"], 6))
+        print("[...] RBX    = ",phex(self.register_table["rbx"], 6))
+        print("[...] RCX    = ",phex(self.register_table["rcx"], 6))
+        print("[...] RDX    = ",phex(self.register_table["rdx"], 6))
+        print("[...] R8     = ",phex(self.register_table["r8"], 6))
+        print("[...] R9     = ",phex(self.register_table["r9"], 6))
+        print("[...] PC     = ",phex(self.register_table["pc"], 6))
+        print("[...] RSP    = ",phex(self.register_table["rsp"], 6))
+        print("[...] RBP    = ",phex(self.register_table["rbp"], 6))
+        print("[...] RIP    = ",phex(self.register_table["rip"], 6))
+        print("[...] RFLAGS = ",phex(self.register_table["rflags"], 6))
   
     # Display the position of the program counter and program
     def print_program_with_position(self, callee, callee_name):

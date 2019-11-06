@@ -14,23 +14,30 @@ from bus import Bus
 
 def main():
 
-    debug = True
+    print("Initializing parameters/settings for simulator...")
 
-    memory_size = input("[?] Size of main memory (bytes): ")
-    cache_size  = input("[?] Size of cache (bytes): ")
-    page_size   = input("[?] Size of pages (bytes): ")
-    
+    user_debug = input("[?] Enable debugging information [No]: ")
+    if user_debug == "Yes":
+        debug = True
+    else:
+        debug = False
 
+    memory_size = input("[?] Size of main memory (bytes) [100]: ")
+    virtual_memory_size = input("[?] Size of virtual memory (bytes) [8000]: ")
+    cache_size  = input("[?] Size of cache (bytes)[40]: ")
+    block_size = input("[?] Size of cache blocks (bytes)[4]: ")
+    page_size   = input("[?] Size of disk pages (bytes)[32]: ")
+    table_size = input("[?] Number of TLB table entries (bytes)[10]: ")
   
     # Initialize components with bus and debug flag
     bus    = Bus(debug)
     cpu    = CPU(debug)
-    cache  = Cache(cache_size, block_size, debug)
-    tlb    = TLB(table_size, debug)
-    memory = Memory(bus, memory_size, virtual_memory_size, debug)
+    cache  = Cache(int(cache_size), int(block_size), debug)
+    tlb    = TLB(int(table_size), debug)
+    memory = Memory(int(memory_size), int(virtual_memory_size), debug)
     disk   = Disk(debug)
   
-    menu   = GUI(bus, cpu, cache, tlb, memory, disk)
+    menu   = GUI(bus, cpu, cache, tlb, memory, disk, debug)
     menu.menu_loop()
 
 main()
