@@ -42,14 +42,17 @@ class CPU:
             print("[CPU] finished initializing...")
     
     def synchronize_with_memory(self, callee, callee_name):
-        starting_position = self.bus.communicate("cpu", callee, callee_name, "virtual memory, starting position")
-        self.register_table["pc"] = starting_position
+        starting_position = self.bus.communicate("cpu", callee, callee_name, 
+                                                 "virtual memory, starting position", "")
+        self.register_table["pc"] = int(starting_position, 0)
 
     def fetch_next_instruction(self, callee, callee_name):
         instruction = self.bus.communicate("cpu", callee, callee_name, "cache, give block", self.register_table["pc"] + 4)
+        self.register_table["pc"] = self.register_table["pc"] + 4
         # parse instruction
-        self.execute_instruction(instruction)
+        parsed = self.parse_instruction(instruction)
 
+        return parsed
 
     def parse_instruction(self, instruction):
         # seperate instruction into op, dest_reg, src_reg, value
@@ -63,31 +66,45 @@ class CPU:
         src_reg = ""
         value = ""
 
-
-        cleaned = instruction.replace(',', '')
-        split = cleaned.split(" ")        
-
-        if len(split) == 2:
-            value = split[1]
-        elif str(split[2]) in register_id:
-            src_reg = split[2]
-            dest_reg = split[1]
+        split_instr = instruction.split(',')
+        if len(split_instr) == 1:
+            print(split_instr)
+            split_instr = split_instr[0].split(' ')
         else:
-            dest_reg = split[1]
-            value = split[2]
+            split_instr[0] = split_instr[0].split(' ', 1)
+            split_instr = [split_instr[0][0], split_instr[0][1], split_instr[1].lstrip(' ')]
+
+        #cleaned = instruction.replace(',', '')
+        #split = cleaned.split(" ")        
+
+        if len(split_instr) == 2:
+            value = split_instr[1]
+        elif str(split_instr[2]) in register_id:
+            src_reg = split_instr[2]
+            dest_reg = split_instr[1]
+        else:
+            dest_reg = split_instr[1]
+            value = split_instr[2]
         
-        op = split[0]
+        op = split_instr[0]
 
         if self.debug_info == True:
             print("[CPU] parsing done, result:")
-            print("[...]   length:", len(split))
-            print("[...]    split:", split)
+            print("[...]   length:", len(split_instr))
+            print("[...]    split:", split_instr)
             print("[...]       op: ", op)
             print("[...] dest_reg: ", dest_reg)
             print("[...]  src_reg: ", src_reg)
             print("[...]    value: ", value)
 
-        return [op, dest_reg, src_reg, value]
+        parsed = {
+            "op": op,
+            "dest_reg": dest_reg,
+            "src_reg": src_reg,
+            "value": value
+        }
+
+        return parsed 
 
     def ALU(self, op, dest_reg, src_reg, value, callee, callee_name):
         if self.debug_info == True:
@@ -130,16 +147,16 @@ class CPU:
     # Print the values of all the registers        
     def print_register_table(self):
         print("[CPU] Printing register table...")   
-        print("[...] RAX    = ",phex(self.register_table["rax"], 6))
-        print("[...] RBX    = ",phex(self.register_table["rbx"], 6))
-        print("[...] RCX    = ",phex(self.register_table["rcx"], 6))
-        print("[...] RDX    = ",phex(self.register_table["rdx"], 6))
-        print("[...] R8     = ",phex(self.register_table["r8"], 6))
-        print("[...] R9     = ",phex(self.register_table["r9"], 6))
-        print("[...] PC     = ",phex(self.register_table["pc"], 6))
-        print("[...] RSP    = ",phex(self.register_table["rsp"], 6))
-        print("[...] RBP    = ",phex(self.register_table["rbp"], 6))
-        print("[...] RIP    = ",phex(self.register_table["rip"], 6))
+        print("[...] RAX    = ",phex(self.register_table["rax"], 32))
+        print("[...] RBX    = ",phex(self.register_table["rbx"], 32))
+        print("[...] RCX    = ",phex(self.register_table["rcx"], 32))
+        print("[...] RDX    = ",phex(self.register_table["rdx"], 32))
+        print("[...] R8     = ",phex(self.register_table["r8"], 32))
+        print("[...] R9     = ",phex(self.register_table["r9"], 32))
+        print("[...] PC     = ",phex(self.register_table["pc"], 32))
+        print("[...] RSP    = ",phex(self.register_table["rsp"], 32))
+        print("[...] RBP    = ",phex(self.register_table["rbp"], 32))
+        print("[...] RIP    = ",phex(self.register_table["rip"], 32))
         print("[...] RFLAGS = ",phex(self.register_table["rflags"], 6))
   
     # Display the position of the program counter and program
@@ -194,7 +211,6 @@ def main():
     cpu.parse_instruction("sub rax, 0")  
     cpu.parse_instruction("sub rax, rbx")  
     cpu.parse_instruction("cmp rax, 0")
-
-
-    #cpu.parse_instruction("jmp label")  
+    cpu.parse_instruction("mov DWORD PTR[rbp+8], 10")
+    cpu.parse_instruction("jmp label")  
                                          

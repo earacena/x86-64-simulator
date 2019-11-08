@@ -124,12 +124,12 @@ class Cache:
 
 
     # If data was missing, and find and store
-    #def look_for_block_addr_in_tlb(self, address, callee, callee_name):
-    #    if self.debug_info == True:
-    #        print("[Cache] Looking for new block in TLB...")
-    #    
-    #    block = self.bus.communicate("cache", callee, callee_name, 
-    #                                 "TLB, physical address of virtual", address)
+    def look_for_block_addr_in_tlb(self, address, callee, callee_name):
+        if self.debug_info == True:
+            print("[Cache] Looking for new block in TLB...")
+        
+        block_address = self.bus.communicate("cache", callee, callee_name, 
+                                             "TLB, physical address of virtual", address)
 
     def update_timer(self):
         for block in self.cache:

@@ -106,7 +106,11 @@ class Memory:
                 output = unallocated
             else:
                 output = instruction
-            print("[...] ", phex(index, 10), " | ", output)
+            
+            if instruction == ".":
+                continue
+            else:
+                print("[...] ", phex(index, 10), " | ", output)
 
     # After initial pages load, map all pages
     def map_pages_to_virtual(self, callee, callee_name):
@@ -125,7 +129,36 @@ class Memory:
 
     def update_virtual_memory(self, page_number, position):
         pass
-        
+
+    def print_virtual_with_position(self, address):
+        if self.debug_info == True:
+            print("\n[V. Memory] Prining layout offset with position '" + str(address) + "':")
+        position = int(phex(address, 8), 0) - (4*3)
+
+        for pos in range(position, position+(4*7), 4):
+            if pos == position + (4*3):
+                print("=====>\t", "[", phex(pos, 8), "] ~ ", self.virtual_memory[pos])
+            else:
+                print("\t", "[", phex(pos, 8), "] ~ ", self.virtual_memory[pos])
+
+    def find_starting_address(self):
+        if self.debug_info == True:
+            print("\n[V. Memory] Looking for starting address...")
+
+        start_address = ""
+
+        for index, instruction in enumerate(self.virtual_memory):
+            if instruction == None:
+                continue
+            elif instruction[1] == "main:":
+                start_address = phex(index, 8)
+                break
+                 
+        if self.debug_info == True:
+            print("[V. Memory] Starting address found '" + start_address + "'...")
+
+        return start_address
+
 
     def print_virtual_memory_layout(self):
         if self.debug_info == True:
@@ -160,4 +193,5 @@ def main():
     memory.map_pages_to_virtual(disk, "disk")
     memory.print_memory_page_table()
     memory.print_virtual_memory_layout()
-
+    memory.print_virtual_with_position("0x1000")
+    memory.find_starting_address()

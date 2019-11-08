@@ -29,7 +29,17 @@ class Bus:
         ### Request handling ### 
         ret = None 
         # CPU Requests
+        if component_caller == "cpu" and request == "virtual memory, print position":
+            # Memory
+            component_callee.print_virtual_with_position(info)
+            ret = "N/A"
 
+        if component_caller == "cpu" and request == "virtual memory, starting position":
+            # ...,    Memory
+            ret = component_callee.find_starting_address()
+
+        if component_caller == "cpu" and request == "cache, give block":
+            ret = cache.find_block(info)
 
         # Memory Requests
         if component_caller == "memory" and request == "disk, initial page number":

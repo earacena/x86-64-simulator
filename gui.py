@@ -3,6 +3,14 @@
 # Filename: gui.py
 # File Description: This file contains the functions related to the GUI component
 
+# Used to reset the simulator
+from cpu import CPU
+from cache import Cache
+from tlb import TLB
+from memory import Memory
+from disk import Disk
+from bus import Bus
+from common import phex
 # Class GUI
 class GUI:
 
@@ -172,6 +180,8 @@ class GUI:
         for instruction in self.disk.source_code:
             print("[...] ", instruction.strip('\n'))
 
+        input("[~] Press any key to continue...")
+
     ## phase_2_choice_C
     
     # phase_3_menu
@@ -194,7 +204,7 @@ class GUI:
         print("Load into memory selected!")
         self.memory.load_initial_pages_of_program(self.disk, "disk")
         self.memory.map_pages_to_virtual(self.disk, "disk")
-    
+        self.cpu.synchronize_with_memory(self.memory, "virtual memory") 
     ## quit
     
     
@@ -229,18 +239,21 @@ class GUI:
         print("")
         print("View cache table selected!")
         self.cache.print_cache()
+        input("[~] Enter any key to continue...")
     
     ## phase_4_choice_F
     def view_cache_stats(self):
         print("")
         print("View cache statstics selected!")
         
+        input("[~] Enter any key to continue...")
     
     ## phase_4_choice_G
     def view_registers(self): 
         print("")
         print("View registers selected!")
         self.cpu.print_register_table()
+        input("[~] Enter any key to continue...")
     
     
     ## phase_4_choice_H
@@ -249,22 +262,26 @@ class GUI:
         print("View memory layout selected!")
         self.memory.print_memory_page_table() 
 
+        input("[~] Enter any key to continue...")
     ## phase_4_choice_I
     def view_virtual_mem_layout(self):
         print("")
         print("View virtual memory layout selected!")
-        self.memory.print_virtual_memory_layout   
+        self.memory.print_virtual_with_position(self.cpu.register_table["pc"]) 
+        input("[~] Enter any key to continue...")
 
     ## phase_4_choice_J
     def view_page_table(self): 
         print("")
         print("View page table selected!")
         self.disk.print_page_table()
+        input("[~] Enter any key to continue...")
     
     ## phase_4_choice_K
     def view_runtime_info(self):
         print("")
         print("View runtime info selected!")
+        input("[~] Enter any key to continue...")
     
     ## quit
     
