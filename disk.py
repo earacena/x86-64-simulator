@@ -11,7 +11,7 @@ class Page:
         self.page_number   = page_number
         self.start_address = phex(start_address, 10)
         self.page_size     = page_size
-        self.end_address   = phex(int(self.start_address, 0) + page_size, 10)
+        self.end_address   = phex(int(self.start_address, 0) + self.page_size, 10)
         self.instructions  = []
         self.num_of_instr  = 0
 
@@ -22,7 +22,7 @@ class Page:
         
 
 class Disk:
-    def __init__(self, debug):
+    def __init__(self, page_size, debug):
 
         self.debug_info = debug;
 
@@ -33,7 +33,7 @@ class Disk:
         self.source_code = []
         self.storage = []
         self.initial_page_number = 0
-        self.page_size = 32
+        self.page_size = page_size
         ###########################
   
         if self.debug_info == True:

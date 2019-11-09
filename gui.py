@@ -1,20 +1,26 @@
-# Project: x86_64 Hardware Simulator
-# Name: Emanuel Aracena
-# Filename: gui.py
-# File Description: This file contains the functions related to the GUI component
+"""
+    Project: x86_64 Hardware Simulator
+    Name: Emanuel Aracena
+    Filename: gui.py
+    File Description: This file contains the functions related to the GUI component
+"""
+# Force python to use python3 print function
+from __future__ import print_function
 
-# Used to reset the simulator
+# Component Modules
 from cpu import CPU
 from cache import Cache
 from tlb import TLB
 from memory import Memory
 from disk import Disk
 from bus import Bus
-from common import phex
-# Class GUI
-class GUI:
 
+# Common file, for reusable function implementations
+from common import phex
+
+class GUI:
     def __init__(self, bus, cpu, cache, tlb, memory, disk, debug):
+        """ Assign the references to the components in the simulator. """
         self.debug_info = True
         self.bus = bus
         self.cpu = cpu
@@ -22,140 +28,112 @@ class GUI:
         self.tlb = tlb
         self.memory = memory
         self.disk = disk
+        self.phase = 1
 
-    def main_menu(self):
-        print("")
-        print("╔═══════════════════════════════════════════════╗")
-        print("║              x86_64 CPU Simulator             ║")
-        print("║                Emanuel Aracena                ║")
-        print("╚═══════════════════════════════════════════════╝")
-
-    # menu_loop
     def menu_loop(self):
+        """ Handles user input and transition between different stages of the UI. """
         choice = ""
-        phase = 1
         while choice is not "z":
-            self.main_menu()
-            if phase == 1:
-                self.phase_1_menu()
+            main_menu()
+            if self.phase == 1:
+                phase_1_menu()
                 choice = input("\nChoice: ")
-                if choice == "a":
-                    phase = 2
-                    self.load_source_code()
-                elif choice == "z":
-                    # Quit
-                    self.quit() 
-            elif phase == 2:
-                self.phase_2_menu()
+                choice_table = self.load_choice_table(self.phase)
+                if choice in choice_table:
+                    choice_table[choice]()
+            elif self.phase == 2:
+                phase_2_menu()
                 choice = input("\nChoice: ")
-                if choice == "a":
-                    phase = 2
-                    self.reset_simulator()
-                    self.load_source_code()
-                elif choice == "b":
-                    self.view_instructions()
-                elif choice == "c":
-                    phase = 3
-                    self.page_application()
-                elif choice == "z":
-                    # Quit
-                    self.quit() 
-            elif phase == 3:
-                self.phase_3_menu()
+                choice_table = self.load_choice_table(self.phase)
+                if choice in choice_table:
+                    choice_table[choice]()
+
+            elif self.phase == 3:
+                phase_3_menu()
                 choice = input("\nChoice: ")
-                if choice == "a":
-                    phase = 2
-                    self.reset_simulator()
-                    self.load_source_code()
-                elif choice == "b":
-                    self.view_instructions()
-                elif choice == "d":
-                    self.load_into_memory()
-                    phase = 4
-                elif choice == "z":
-                    # Quit
-                    self.quit()
-            elif phase == 4:
-                self.phase_4_menu()
+                choice_table = self.load_choice_table(self.phase)
+                if choice in choice_table:
+                    choice_table[choice]()
+
+            elif self.phase == 4:
+                phase_4_menu()
                 choice = input("\nChoice: ")
-                if choice == "a":
-                    phase = 2
-                    self.reset_simulator()
-                    self.load_source_code()
-                elif choice == "b":
-                    self.view_instructions()
-                elif choice == "d":
-                    self.simulate_one_instruction()
-                elif choice == "e":
-                    self.view_cache_table()
-                elif choice == "f":
-                    self.view_cache_stats()
-                elif choice == "g":
-                    self.view_registers()
-                elif choice == "h":
-                    self.view_memory_layout()
-                elif choice == "i":
-                    self.view_virtual_mem_layout()
-                elif choice == "j":
-                    self.view_page_table()
-                elif choice == "k":
-                    self.view_runtime_info()
-                elif choice == "z":
-                    # Quit
-                    self.quit() 
+                choice_table = self.load_choice_table(self.phase)
+                if choice in choice_table:
+                    choice_table[choice]()
+
             else:
                 # Phase 5
-                phase = 1
-    
-    
-    # phase_1_menu
-    def phase_1_menu(self):
-        print("")
-        print("a. Load source code")
-        print("")
-        print("z. Quit")
-    
-    ## phase_1_choice_A
+                phase_5_menu()
+                self.phase = 1
+
+    def load_choice_table(self, phase):
+        """ Load appropriate choice table for menu, avoids many if-statements. """
+        if phase == 1:
+            choice_table = {
+                "a": self.load_source_code,
+                "z": terminate
+            }
+
+        elif phase == 2:
+            choice_table = {
+                "a": self.reset_and_load_source_code,
+                "b": self.view_instructions,
+                "c": self.page_application,
+                "z": terminate
+            }
+
+        elif phase == 3:
+            choice_table = {
+                "a": self.reset_and_load_source_code,
+                "b": self.view_instructions,
+                "d": self.load_into_memory,
+                "z": terminate
+            }
+
+        elif phase == 4:
+            choice_table = {
+                "a": self.reset_and_load_source_code,
+                "b": self.view_instructions,
+                "d": self.simulate_one_instruction,
+                "e": self.view_cache_table,
+                "f": self.view_cache_stats,
+                "g": self.view_registers,
+                "h": self.view_memory_layout,
+                "i": self.view_virtual_mem_layout,
+                "j": self.view_page_table,
+                "k": self.view_runtime_info,
+                "z": terminate
+            }
+
+        return choice_table 
+
     def load_source_code(self):
-        print("")
-        print("Load source code selected!")
+        """ Load data from file with given filename."""
+        print("\nLoad source code selected!")
         filename = input("Filename?[x86_64 .asm only]: ")
         self.disk.load_file(filename)
-    
-    ## quit
-    def quit(self):
-        print("")
-        print("Quit selected!")
-    
-    
-    # phase_2_menu
-    def phase_2_menu(self):
-        print("")
-        print("a. Reset and load new source code")
-        print("┕ b. View instructions")
-        print("")
-        print("c. Page source code.")
-        print("")
-        print("z. Quit")
-   
+        self.phase = 2 
 
     def page_application(self):
+        """ Page the application by calling the Disk component's method. """
+        self.phase = 3
         max_instr_size = 4
         self.disk.page_application(max_instr_size) 
 
     def reset_simulator(self):
-        print("")
-        print("Reset simulator, selected!")
+        """ Reassign the references of the components to reset the simulation. """
+        print("\nReset simulator, selected!")
 
         # instance new component objects
         debug = self.bus.debug_info
 
         self.bus = Bus(debug)
         self.cpu = CPU(debug)
-        
+ 
         cache_size = self.cache.cache_size
         block_size = self.cache.block_size
-        self.cache = Cache()
+        self.cache = Cache(cache_size, block_size, debug)
 
         table_size = self.tlb.table_size
         self.tlb = TLB(table_size, debug)
@@ -165,132 +143,133 @@ class GUI:
         self.memory = Memory(memory_size, virtual_memory_size, debug)
 
         self.disk = Disk(debug)
-    
-    ## phase_2_choice_A
+
     def reset_and_load_source_code(self):
+        """ Reset the simulator and give pronmpt to load data from new file. """
+        self.phase = 2
         reset_simulator()
         load_source_code()
     
-    ## phase_2_choice_B
     def view_instructions(self):
-        print("")
-        print("View instructions selected!")
+        """ View the currently loaded program instructions. """
+        print("\nView instructions selected!")
 
         print("\n[PRINT] Printing source code...")
         for instruction in self.disk.source_code:
             print("[...] ", instruction.strip('\n'))
 
         input("[~] Press any key to continue...")
-
-    ## phase_2_choice_C
-    
-    # phase_3_menu
-    def phase_3_menu(self):
-        print("")
-        print("a. Reset and load new source code")
-        print("┕ b. View instructions")
-        print("")
-        print("d. Load into memory")
-        print("")
-        print("z. Quit")
-    
-    ## phase_2_choice_A
-    ## phase_2_choice_B
-    
-    
-    ## phase_3-choice_D
+ 
     def load_into_memory(self):
-        print("")
-        print("Load into memory selected!")
+        """ Load as many pages that fit in memory, starting with the starting page (main). """
+        print("\nLoad into memory selected!")
+        self.phase = 4
         self.memory.load_initial_pages_of_program(self.disk, "disk")
         self.memory.map_pages_to_virtual(self.disk, "disk")
-        self.cpu.synchronize_with_memory(self.memory, "virtual memory") 
-    ## quit
-    
-    
-    # phase_4_menu
-    def phase_4_menu(self):
-        print("")
-        print("a. Reset and load new source code")
-        print("┕ b. View instructions")
-        print("")
-        print("d. Simulate one instruction")
-        print("┝ e. View Cache table")
-        print("┝ f. View Cache statistics")
-        print("┝ g. View registers")
-        print("┝ h. View memory layout")
-        print("┝ i. View virtual memory layout")
-        print("┝ j. View page table")
-        print("┕ k. View current run-time info")
-        print("")
-        print("z. Quit")
-    
-    ## phase_2_choice_A
-    ## phase_2_choice_B
-    ## phase_2_choice_C
-    
-    ## phase_4_choice_D
+        self.cpu.synchronize_with_memory(self.memory, "virtual memory")  
+
     def simulate_one_instruction(self):
-        print("")
-        print("Simulate one instruction selected!")
+        """ Simulate the communication of executing one instruction. """
+        print("\nSimulate one instruction selected!")
     
-    ## phase_4_choice_E
     def view_cache_table(self):
-        print("")
-        print("View cache table selected!")
+        """ View the contents of the cache. """
+        print("\nView cache table selected!")
         self.cache.print_cache()
         input("[~] Enter any key to continue...")
     
-    ## phase_4_choice_F
     def view_cache_stats(self):
-        print("")
-        print("View cache statstics selected!")
-        
+        """ 
+            View the current statistics of the cache regarding hit, miss, replace
+            ratios.
+        """
+        print("\nView cache statstics selected!")
+
         input("[~] Enter any key to continue...")
-    
-    ## phase_4_choice_G
-    def view_registers(self): 
-        print("")
-        print("View registers selected!")
+ 
+    def view_registers(self):
+        """ View the current values of the CPU registers. """
+        print("\nView registers selected!")
         self.cpu.print_register_table()
         input("[~] Enter any key to continue...")
-    
-    
-    ## phase_4_choice_H
+
     def view_memory_layout(self):
-        print("")
-        print("View memory layout selected!")
+        """ View the current contents of the memory component. """
+        print("\nView memory layout selected!")
         self.memory.print_memory_page_table() 
 
         input("[~] Enter any key to continue...")
-    ## phase_4_choice_I
+
     def view_virtual_mem_layout(self):
-        print("")
-        print("View virtual memory layout selected!")
+        """ View the current mappings of the virtual memory. """
+        print("\nView virtual memory layout selected!")
         self.memory.print_virtual_with_position(self.cpu.register_table["pc"]) 
         input("[~] Enter any key to continue...")
 
-    ## phase_4_choice_J
-    def view_page_table(self): 
-        print("")
-        print("View page table selected!")
+    def view_page_table(self):
+        """ View the current contents of the Disk's page table. """
+        print("\nView page table selected!")
         self.disk.print_page_table()
         input("[~] Enter any key to continue...")
-    
-    ## phase_4_choice_K
+
     def view_runtime_info(self):
-        print("")
-        print("View runtime info selected!")
+        """ View the runtime statistics of the simulated program. """
+        print("\nView runtime info selected!")
         input("[~] Enter any key to continue...")
-    
-    ## quit
-    
-    
-    
-    # phase_5_menu
-    
-    def phase_5_menu(self):
-        print("")
-        print("[ATTENTION] PROGRAM HAS FINISHED EXECUTION, RETURNING TO MENU!")
-        
-    ### same as phase 4 with message stating that execution has completed.
+ 
+def main_menu():
+    """ Prints the main menu splash screen. """
+    print("")
+    print("╔═══════════════════════════════════════════════╗")
+    print("║              x86_64 CPU Simulator             ║")
+    print("║                Emanuel Aracena                ║")
+    print("╚═══════════════════════════════════════════════╝")
+
+def phase_1_menu():
+    """ Menu for the first stage of the UI. """
+    print("")
+    print("a. Load source code")
+    print("")
+    print("z. Quit")
+
+def phase_2_menu():
+    """ The menu for the second stage of the UI. """
+    print("")
+    print("a. Reset and load new source code")
+    print("┕ b. View instructions")
+    print("")
+    print("c. Page source code.")
+    print("")
+    print("z. Quit") 
+
+def phase_3_menu():
+    """ The menu for third stage of the UI. """
+    print("\na. Reset and load new source code")
+    print("┕ b. View instructions")
+    print("")
+    print("d. Load into memory")
+    print("")
+    print("z. Quit")
+
+def phase_4_menu():
+    """ The menu for the fourth stage of the UI. """
+    print("\na. Reset and load new source code")
+    print("┕ b. View instructions")
+    print("\nd. Simulate one instruction")
+    print("┝ e. View Cache table")
+    print("┝ f. View Cache statistics")
+    print("┝ g. View registers")
+    print("┝ h. View memory layout")
+    print("┝ i. View virtual memory layout")
+    print("┝ j. View page table")
+    print("┕ k. View current run-time info")
+    print("\nz. Quit")
+
+def phase_5_menu():
+    """ The menu for the fifth stage of the UI. Used as a placeholder."""
+    print("\n[ATTENTION] PROGRAM HAS FINISHED EXECUTION, RETURNING TO MENU!")
+
+def terminate():
+    """ Exit the program. """
+    print("")
+    print("Quit selected!")
