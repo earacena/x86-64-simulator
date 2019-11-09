@@ -131,6 +131,16 @@ class Cache:
         block_address = self.bus.communicate("cache", callee, callee_name, 
                                              "TLB, physical address of virtual", address)
 
+        return block_address
+
+    def retrieve_block(self, address, callee, callee_name):
+        # Use bus to get block with specified address
+        if self.debug_info == True:
+            print("[Cache] Retrieving missing block...")
+        block = self.bus.communicate("cache", callee, callee_name, "memory, give block", address)
+        self.insert([address, block])
+
+
     def update_timer(self):
         for block in self.cache:
             block.timer = block.timer + 1

@@ -19,22 +19,27 @@ class TLB:
         self.num_of_entries = 0
 
     def find_physical_address(self, virtual_address):
+        if self.debug_info == True:
+            print("[TLB] Looking for translation for address '" + str(virtual_address) + "'...")
+        
         for entry in self.virtual_page_table:
-            if entry[0] == virtual_address:
+            if entry != None and entry[0] == virtual_address:
                 return entry[1]
 
         return "TLB MISS"
 
     def store_translation(self, virtual_address, physical_address):
-        self.virtual_page_table[num_of_entries % self.table_size] = [virtual_address, physical_address]
+        if self.debug_info == True:
+            print("[TLB] Storing translation entry [" + str(virtual_address) + ", " + str(physical_address) + "]...")
+        self.virtual_page_table[self.num_of_entries % self.table_size] = [virtual_address, physical_address]
         self.num_of_entries = self.num_of_entries + 1
 
 # Unit test
 def main():
     debug = True
-
-    tlb = TLB(debug)
-    tlb.virtual_page_table.append(['0xAAAA', '0x0010'])
+    table_size = 20
+    tlb = TLB(table_size, debug)
+    tlb.store_translation('0xAAAA', '0x0010')
 
     # Test confirmed virtual address    
     test_virt_addr = '0xAAAA'

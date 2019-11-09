@@ -54,6 +54,11 @@ class Bus:
         if component_caller == "virtual memory" and request == "disk, all pages for mapping":
             ret = component_callee.storage        
         # Cache Requests
+        if component_caller == "cache" and request == "TLB, physical address of virtual":
+            ret = self.tlb.find_physical_address(info)        
+
+        if component_caller == "cache" and request == "memory, give block":
+            ret = self.virtual_memory[int(info, 0)][1]
 
         # TLB Requests
 
