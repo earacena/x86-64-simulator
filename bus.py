@@ -1,33 +1,47 @@
-# Project: x86_64 Hardware Simulator
-# Name: Emanuel Aracena
-# Filename: bus.py
-# File Description: This file contains the functions related to the Bus component
+"""
+    Project: x86_64 Hardware Simulator
+    Name: Emanuel Aracena
+    Filename: bus.py
+    File Description: This file contains the functions related to the Bus component
+"""
 
-# Components linked
+# Force python to use Python3 print function
+from __future__ import print_function
+
+
 class Bus:
+    """
+        This class represents the component that handles communication between other
+        components.
+    """
     def __init__(self, debug):
-
+        """ Initialize the bus component. """
         self.debug_info = debug
-        if self.debug_info == True:
+
+        if self.debug_info is True:
             print("[Bus] initializing...")
 
         ### Initialization code ###
         ###########################
 
-        if self.debug_info == True:
+        if self.debug_info is True:
             print("[Bus] finished initializing...")
-        
-    # communicate with another component and return requested information
+
+
     def communicate(self, component_caller, component_callee, callee_name, request, info):
-        if self.debug_info == True:
-            print("")
-            print("[Bus] caller:    ", component_caller)
+        """
+            Communicate between two components, calling methods of a callee component on
+            behalf of a caller component.
+        """
+        if self.debug_info is True:
+            print("\n[Bus] caller:    ", component_caller)
             print("[Bus] callee:    ", callee_name)
-            print("[Bus]   request: ", request)   
+            print("[Bus]   request: ", request)
             print("[Bus]   info:    ", info)
-        
-        ### Request handling ### 
-        ret = None 
+
+        ### Request handling ###
+        ret = None
+
         # CPU Requests
         if component_caller == "cpu" and request == "virtual memory, print position":
             # Memory
@@ -39,7 +53,7 @@ class Bus:
             ret = component_callee.find_starting_address()
 
         if component_caller == "cpu" and request == "cache, give block":
-            ret = cache.find_block(info)
+            ret = component_callee.find_block(info)
 
         # Memory Requests
         if component_caller == "memory" and request == "disk, initial page number":
@@ -52,21 +66,20 @@ class Bus:
             ret = component_callee.load_page(int(info))
 
         if component_caller == "virtual memory" and request == "disk, all pages for mapping":
-            ret = component_callee.storage        
+            ret = component_callee.storage
         # Cache Requests
         if component_caller == "cache" and request == "TLB, physical address of virtual":
-            ret = self.tlb.find_physical_address(info)        
+            ret = component_callee.find_physical_address(info)
 
         if component_caller == "cache" and request == "memory, give block":
-            ret = self.virtual_memory[int(info, 0)][1]
+            ret = component_callee.virtual_memory[int(info, 0)][1]
 
         # TLB Requests
 
         # Disk Requests
-  
-        ########################
 
-        if self.debug_info == True:
+        ########################
+        if self.debug_info is True:
             print("[Bus] communication response: ", ret)
 
         return ret
