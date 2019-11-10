@@ -175,6 +175,10 @@ class GUI:
     def simulate_one_instruction(self):
         """ Simulate the communication of executing one instruction. """
         print("\nSimulate one instruction selected!")
+        fetched_and_parsed = self.cpu.fetch_next_instruction(self.cache, "cache") 
+        print("[...] Fetched and parsed instruction: ", fetched_and_parsed)  
+
+        input("[~] Enter any key to continue...")
 
     def view_cache_table(self):
         """ View the contents of the cache. """
@@ -188,7 +192,7 @@ class GUI:
             ratios.
         """
         print("\nView cache statstics selected!")
-
+        self.cache.print_stats()
         input("[~] Enter any key to continue...")
 
     def view_registers(self):

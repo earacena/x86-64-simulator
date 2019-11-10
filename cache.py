@@ -38,6 +38,12 @@ class Cache:
         self.bus = Bus(self.debug_info)
         ###########################
 
+        #### Performance Stats ####
+        self.hits = 0
+        self.misses = 0
+        self.replacements = 0
+        ###########################
+
         if self.debug_info is True:
             print("[Cache] finished initializing...")
             print("[Cache] Max number of blocks '", self.max_number_of_blocks, "'...")
@@ -61,7 +67,7 @@ class Cache:
                 oldest_time = block.timer
                 oldest_block_number = index
 
-        if self.debug_info == True:
+        if self.debug_info is True:
             print("[Cache] LRU block found...")
             print("[...]      block data : ", self.cache[oldest_block_number].data)
             print("[...]      block timer: ", self.cache[oldest_block_number].timer)
@@ -95,7 +101,6 @@ class Cache:
             self.print_cache()
         else:
             # Otherwise, place into an open spot
-            spot = False
             print("[...] Cache has empty slots...")
             position = self.find_empty_spot()
             self.cache[position] = Block()
@@ -108,11 +113,12 @@ class Cache:
         for index, block in enumerate(self.cache):
             if block.valid == 0:
                 return index
+        return 0
 
     def find_block(self, address):
         """ Returns "HIT" or "MISS" depending on if data is present. """
         if self.debug_info is True:
-            print("[Cache] looking for block with address '" + address + "'...")
+            print("[Cache] looking for block with address '" + str(address) + "'...")
 
         for block in self.cache:
             if block.data[0] == address:
@@ -141,6 +147,19 @@ class Cache:
         """ Update the timers for all blocks in memory, increment by 1. """
         for block in self.cache:
             block.timer = block.timer + 1
+
+    def print_stats(self):
+        """ Print the hit ratio, miss ratio, and replacement ratios. """
+        print("[Cache] Printing cache statistics:")
+        total = self.hits + self.misses + self.replacements
+
+        # Avoid dividing by 0
+        if total == 0:
+            total = 1
+
+        print("[...]    hit ratio:         ", (self.hits / (total)))
+        print("[...]    miss ratio:        ", (self.misses / (total)))
+        print("[...]    replacement ratio: ", (self.replacements / (total)))
 
     def print_cache(self):
         """ Print the contents of the cache. """
@@ -190,11 +209,11 @@ def main():
     cache.insert(["0x4444", 1100])
 
     # test finding data based on virtual address
-    data = cache.find_block("0xEEEE")
     print("\n[TEST] Looking for data with address '0xEEEE'...")
+    data = cache.find_block("0xEEEE")
     print("[...] Data found/Status: ", data)
 
     # test finding data that isnt present, SHOULD RETURN "MISS"
-    data = cache.find_block("0xGGGG")
     print("\n[TEST] Looking for data with address '0xGGGG'...")
+    data = cache.find_block("0xGGGG")
     print("[...] Data found/Status: ", data)

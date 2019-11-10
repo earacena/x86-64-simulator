@@ -20,7 +20,9 @@ from bus import Bus
 def main():
     """ Main Routine """
 
-    print("Initializing parameters/settings for simulator...")
+    print("\n[.] Initializing parameters/settings for simulator...")
+    print("[.] Values in brackets represent reccommended/tested values.")
+    print("[.] Using untested values may result in unstable behavior.\n")
     # Ask for parameters
     user_debug = input("[?] Enable debugging information [No]: ")
     debug = (user_debug == "Yes")

@@ -67,6 +67,10 @@ class CPU:
                                            self.register_table["pc"] + 4)
         self.register_table["pc"] = self.register_table["pc"] + 4
 
+        # Cache missed
+        if instruction == "MISS":
+            return "CACHE MISSED"
+
         # parse instruction
         parsed = self.parse_instruction(instruction)
 
@@ -85,6 +89,10 @@ class CPU:
         dest_reg = ""
         src_reg = ""
         value = ""
+
+        # just a label, ignore
+        if ':' in instruction:
+            return "label"
 
         split_instr = instruction.split(',')
         if len(split_instr) == 1:
