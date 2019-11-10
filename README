@@ -1,14 +1,49 @@
 Project title: x86_64 CPU simulator
 Author: Emanuel Aracena
+
 Description: A simple, abstracted, CPU simulator that demonstrates concepts like paging, virtual memory,
-             and bus communication in x86_64 hardware.
+             and bus communication in x86_64 hardware. The purpose of this project is to "mimic" different
+             behaviors shown by hardware (specifically in x86 in this example) and not create a 1:1
+             emulation of the system. Certain behaviors are not fully accurate to their real world
+             counterparts such as the presence addresses stored in some components.
+
+Components simulated:
+        * CPU
+        * Cache
+        * Translation lookaside buffer (TLB)
+        * Memory 
+          * Virtual Memory
+        * Disk
+        * System Bus (Bus)
+
+Behavior implementations:
+        * Disk paging                   [Completed]
+        * Pages loaded onto main memory [Completed]
+        * Storing pages in memory       [Completed]
+        * Replacing pages in memory     [Completed]
+        * Simulating virtual memory     [Completed]
+        * Mapping memory to virtual mem.[Completed]
+        * TLB entry searching           [Completed]
+        * TLB translation storing       [Completed]
+        * Block object (data, timer)    [Completed]
+        * LRU Cache (insertion, timer)  [Completed]
+        * Cache block search            [Not fully tested]
+        * Cache statistics              [Not integrated]
+        * CPU ALU (mov, add, sub, jmp)  [Completed, but not all desired instructions implemented]
+        * CPU instruction fetching      [Completed, not full integrated]
+        * CPU instruction parsing       [Not fully tested]
+        * Bus intercomponent requests   [Completed, missing a few request implementations]
 
 To run unit tests on each component, in terminal type:
     python3 (>>> means inside python environment)
     >>> import component (without the .py extension)
     >>> component.main()
 
-All components except for gui.py and bus.py contain a unit test.
+* All components except for gui.py and bus.py contain a unit test.
 
 To run, type:
     python3 main.py
+
+* Reccommended usage parameters are the values in brackets, attempting to load other files or use
+  other parameters may result in undefined behavior or errors. Use "test.asm" and recommended values
+  to observe implemented behaviors as intended.
