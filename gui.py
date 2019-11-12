@@ -1,6 +1,6 @@
 """
     Project: x86_64 Hardware Simulator
-    Name: Emanuel Aracena
+    Author: Emanuel Aracena
     Filename: gui.py
     File Description: This file contains the functions related to the GUI component
 """
@@ -13,11 +13,10 @@ from cache import Cache
 from tlb import TLB
 from memory import Memory
 from disk import Disk
-from disk import print_page
 from bus import Bus
 
 # Common file, for reusable function implementations
-#from common import phex
+# from common import phex
 
 class GUI:
     """ This class handles all UI activity and manages integration with other components. """
@@ -40,35 +39,23 @@ class GUI:
             main_menu()
             if self.phase == 1:
                 phase_1_menu()
-                choice = input("\nChoice: ")
-                choice_table = self.load_choice_table(self.phase)
-                if choice in choice_table:
-                    choice_table[choice]()
             elif self.phase == 2:
                 phase_2_menu()
-                choice = input("\nChoice: ")
-                choice_table = self.load_choice_table(self.phase)
-                if choice in choice_table:
-                    choice_table[choice]()
-
             elif self.phase == 3:
                 phase_3_menu()
-                choice = input("\nChoice: ")
-                choice_table = self.load_choice_table(self.phase)
-                if choice in choice_table:
-                    choice_table[choice]()
-
             elif self.phase == 4:
                 phase_4_menu()
-                choice = input("\nChoice: ")
-                choice_table = self.load_choice_table(self.phase)
-                if choice in choice_table:
-                    choice_table[choice]()
-
             else:
-                # Phase 5
                 phase_5_menu()
+                main_menu()
+                phase_1_menu()
                 self.phase = 1
+
+            choice = input("\nChoice: ")
+            choice_table = self.load_choice_table(self.phase)
+            if choice in choice_table:
+                choice_table[choice]()
+
 
     def load_choice_table(self, phase):
         """ Load appropriate choice table for menu, avoids many if-statements. """
@@ -175,8 +162,15 @@ class GUI:
     def simulate_one_instruction(self):
         """ Simulate the communication of executing one instruction. """
         print("\nSimulate one instruction selected!")
-        fetched_and_parsed = self.cpu.fetch_next_instruction(self.cache, "cache") 
-        print("[...] Fetched and parsed instruction: ", fetched_and_parsed)  
+        fetched_and_parsed = self.cpu.fetch_next_instruction(self.cache, "cache")
+        print("[...] Fetched and parsed instruction: ", fetched_and_parsed)
+        if fetched_and_parsed == "MISS":
+            # Search TLB for translation
+            physical_address = self.tlb.find_physical_address(self.cpu.register_table["pc"])
+            print("[...] Physical translation from TLB: ", physical_address)
+            if physical_address == "MISS":
+                # Search virtual memory and memory for data and translation
+                print("[...] Searching main and v. memory for data...")
 
         input("[~] Enter any key to continue...")
 
@@ -279,4 +273,4 @@ def phase_5_menu():
 def terminate():
     """ Exit the program. """
     print("")
-    print("Quit selected!")
+    print("[...] Quit selected!")

@@ -142,7 +142,7 @@ class Memory:
     def print_virtual_with_position(self, address):
         """ Print the position of the simulator in virtual memory with given PC address. """
         if self.debug_info is True:
-            print("\n[V. Memory] Prining layout offset with position '" + str(address) + "':")
+            print("\n[V. Memory] Prining v. memory with position '" + phex(address, 5) + "':")
         position = int(phex(address, 8), 0) - (4*3)
 
         for pos in range(position, position+(4*7), 4):

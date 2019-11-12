@@ -3,7 +3,7 @@ Author: Emanuel Aracena
 
 Description: A simple, abstracted, CPU simulator that demonstrates concepts like paging, virtual memory,
              and bus communication in x86_64 hardware. The purpose of this project is to "mimic" different
-             behaviors shown by hardware (specifically in x86 in this example) and not create a 1:1
+             behaviors shown by hardware (specifically in x86 in this example) and not to create a 1:1
              emulation of the system. Certain behaviors are not fully accurate to their real world
              counterparts such as the presence addresses stored in some components.
 
@@ -33,7 +33,8 @@ Behavior implementations:
         * CPU instruction fetching      [Completed, not full integrated]
         * CPU instruction parsing       [Not fully tested]
         * Bus intercomponent requests   [Completed, missing a few request implementations]
-
+        * Timing and cycles counting    [Not implemented]
+  
 To run unit tests on each component, in terminal type:
     python3 (>>> means inside python environment)
     >>> import component (without the .py extension)
