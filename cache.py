@@ -121,7 +121,7 @@ class Cache:
     def find_block(self, address):
         """ Returns "HIT" or "MISS" depending on if data is present. """
         if self.debug_info is True:
-            print("[Cache] looking for block with address '" + phex(address, 5) + "'...")
+            print("[Cache] looking for block with address '" + address + "'...")
 
         for block in self.cache:
             if block.data[0] == address:

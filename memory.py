@@ -205,5 +205,5 @@ def main():
     memory.map_pages_to_virtual(disk, "disk")
     memory.print_memory_page_table()
     memory.print_virtual_memory_layout()
-    memory.print_virtual_with_position("0x1000")
+    memory.print_virtual_with_position(int("0x1000", 0))
     memory.find_starting_address()
