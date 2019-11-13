@@ -30,7 +30,7 @@ class TLB:
             if entry != None and entry[0] == virtual_address:
                 return entry[1]
 
-        return "TLB MISS"
+        return "TLB MISSED"
 
     def store_translation(self, virtual_address, physical_address):
         """ Store a translation entry. """

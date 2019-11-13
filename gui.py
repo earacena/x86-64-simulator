@@ -164,13 +164,36 @@ class GUI:
         print("\nSimulate one instruction selected!")
         fetched_and_parsed = self.cpu.fetch_next_instruction(self.cache, "cache")
         print("[...] Fetched and parsed instruction: ", fetched_and_parsed)
-        if fetched_and_parsed == "MISS":
+        if fetched_and_parsed == "CACHE MISSED":
             # Search TLB for translation
             physical_address = self.tlb.find_physical_address(self.cpu.register_table["pc"])
             print("[...] Physical translation from TLB: ", physical_address)
-            if physical_address == "MISS":
+            if physical_address == "TLB MISSED":
                 # Search virtual memory and memory for data and translation
                 print("[...] Searching main and v. memory for data...")
+                data = self.memory.virtual_memory[self.cpu.register_table["pc"]]
+                
+                # If address not present in memory pages, load proper page
+                present = False
+                for mem_data in self.memory.memory:
+                    if data[0] == mem_data:
+                        present = True
+
+                # Page not present in memory
+                if present is False:
+                    page = self.bus.communicate("memory", self.disk, "disk", "disk, send page",
+                                               data[0])
+                    self.memory.replace_page(page)
+ 
+                # Store translation
+                self.tlb.store_translation(self.cpu.register_table["pc"], data[0])
+
+                # Insert data in cache
+                self.cache.insert(self.cpu.register_table["pc"], data[1])
+
+            fetch_and_parsed = self.cpu.parse_instruction(data[1])
+        self.cpu.ALU(fetched_and_parsed["op"], fetched_and_parsed["dest_reg"],
+                     fetched_and_parsed["src_dest"], fetched_and_parsed["value"])
 
         input("[~] Enter any key to continue...")
 
@@ -179,6 +202,7 @@ class GUI:
         print("\nView cache table selected!")
         self.cache.print_cache()
         input("[~] Enter any key to continue...")
+
 
     def view_cache_stats(self):
         """

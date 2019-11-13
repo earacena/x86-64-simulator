@@ -11,6 +11,9 @@ from __future__ import print_function
 # Components
 from bus import Bus
 
+# Common, reusable functions
+from common import phex
+
 class Block:
     """ This class represents data stored as cache blocks. """
     def __init__(self):
@@ -118,7 +121,7 @@ class Cache:
     def find_block(self, address):
         """ Returns "HIT" or "MISS" depending on if data is present. """
         if self.debug_info is True:
-            print("[Cache] looking for block with address '" + str(address) + "'...")
+            print("[Cache] looking for block with address '" + phex(address, 5) + "'...")
 
         for block in self.cache:
             if block.data[0] == address:

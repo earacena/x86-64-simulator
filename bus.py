@@ -63,7 +63,7 @@ class Bus:
             ret = component_callee.page_size
 
         if component_caller == "memory" and request == "disk, send page":
-            ret = component_callee.load_page(int(info))
+            ret = component_callee.load_page(int(info, 0))
 
         if component_caller == "virtual memory" and request == "disk, all pages for mapping":
             ret = component_callee.storage
