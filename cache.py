@@ -1,6 +1,6 @@
 """
     Project: x86_64 Hardware Simulator
-    Author: Emanuel Aracena
+    Author: Emanuel Aracena Beriguete
     Filename: cache.py
     File Description: This file contains the functions related to the Cache component
 """

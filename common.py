@@ -1,6 +1,6 @@
 """
     Project: x86_64 Hardware Simulator
-    Author: Emanuel Aracena
+    Author: Emanuel Aracena Beriguete
     Filename: common.py
     File Description: This file contains usefule functions used throughout the
                       project.

@@ -1,6 +1,6 @@
 """
     Project: x86_64 Hardware Simulator
-    Name: Emanuel Aracena
+    Name: Emanuel Aracena Beriguete
     Filename: bus.py
     File Description: This file contains the functions related to the Bus component
 """
