@@ -1,5 +1,5 @@
 Project title: x86_64 CPU simulator
-Author: Emanuel Aracena
+Author: Emanuel Aracena Beriguete
 
 Description: A simple, abstracted, CPU simulator that demonstrates concepts like paging, virtual memory,
              and bus communication in x86_64 hardware. The purpose of this project is to "mimic" different
